@@ -1,0 +1,259 @@
+:root{
+  --bg-1: #07101a;
+  --bg-2: #051522;
+  --panel: rgba(10,18,27,0.7);
+  --glass: rgba(255,255,255,0.03);
+  --muted: #9aa7b8;
+  --text: #e6eef6;
+
+  /* neon accent */
+  --accent: #06b6d4;   /* cyan */
+  --accent-2: #7c5cff; /* purple */
+  --accent-3: #00d084; /* green */
+
+  --btn-dark: linear-gradient(180deg,#0b1520,#071020);
+  --btn-soft: linear-gradient(180deg,#12202a,#0e1620);
+
+  --radius: 10px;
+  --gap: 10px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; padding:0}
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:18px;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.06), transparent 10%),
+    radial-gradient(1000px 600px at 90% 90%, rgba(6,182,212,0.04), transparent 10%),
+    linear-gradient(180deg,var(--bg-1), var(--bg-2));
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* container */
+.calculator{
+  width:100%;
+  max-width:920px;
+  max-height:92vh;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:14px;
+  border-radius:14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  box-shadow:
+    0 8px 30px rgba(2,6,23,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.02);
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* top bar */
+.top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.top-bar .settings{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; min-width:0; }
+.toggle{ display:flex; gap:8px; align-items:center; color:var(--muted); font-size:0.95rem; }
+.toggle input{ width:14px; height:14px; transform:translateY(1px); }
+
+/* display */
+.display-wrap{ display:flex; flex-direction:column; gap:6px; }
+.display{
+  height:64px;
+  border-radius:10px;
+  padding:10px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  font-size:2rem;
+  font-weight:700;
+  color:var(--text);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: inset 0 -6px 30px rgba(0,0,0,0.45);
+  position:relative;
+  overflow:hidden;
+}
+
+/* subtle illuminated strip behind numbers */
+.display::after{
+  content:'';
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:280px;
+  background: linear-gradient(90deg, rgba(6,182,212,0.06), rgba(124,92,255,0.04));
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
+
+/* error display */
+.display.error{ background: linear-gradient(90deg, rgba(185,28,28,0.18), rgba(185,28,28,0.08)); color:#fff; box-shadow:0 6px 30px rgba(185,28,28,0.18); }
+
+/* subdisplay */
+.subdisplay{ min-height:18px; color:var(--muted); font-size:0.92rem; text-align:right; padding-right:6px; }
+
+/* main area */
+.main-area{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  flex:1 1 auto;
+  min-height:0;
+}
+
+/* buttons grid */
+.buttons{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(62px, 1fr));
+  gap: var(--gap);
+  flex:1 1 0%;
+  overflow:auto;
+  padding-right:6px;
+  max-height: calc(92vh - 280px);
+}
+
+/* button base */
+.btn{
+  --glow: 0 6px 18px rgba(6,182,212,0.06), inset 0 1px 0 rgba(255,255,255,0.03);
+  position:relative;
+  border: none;
+  padding:12px;
+  border-radius:10px;
+  color:var(--text);
+  font-weight:600;
+  font-size:0.95rem;
+  cursor:pointer;
+  user-select:none;
+  background: var(--btn-dark);
+  box-shadow: var(--glow);
+  transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+  overflow:visible;
+}
+
+/* button inner glossy band */
+.btn::before{
+  content:'';
+  position:absolute;
+  left:6%;
+  right:6%;
+  top:6%;
+  height:38%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border-radius:8px;
+  pointer-events:none;
+  mix-blend-mode:overlay;
+}
+
+/* backlight effect (glow) using pseudo element */
+.btn::after{
+  content:'';
+  position:absolute;
+  inset: -6px;
+  border-radius:inherit;
+  z-index:-1;
+  opacity:0;
+  transition: opacity .14s ease, filter .14s ease;
+  filter: blur(12px) saturate(120%);
+}
+
+/* different styles */
+.btn.control{ background: linear-gradient(180deg,#121826,#0c141b); color:var(--muted); }
+.btn.func{ background: linear-gradient(180deg,#12202a,#0e1620); color:var(--muted); }
+.btn.const{ background: linear-gradient(180deg,#101820,#0b1418); color:var(--muted); }
+.btn.num{ background: linear-gradient(180deg,#0f1b26,#0a131a); color:var(--text); }
+.btn.op{ background: linear-gradient(180deg,#0bb5c6,#0896a3); color:white; font-weight:700; }
+.btn.equals{
+  background: linear-gradient(180deg,var(--accent), #0896a3);
+  color:#021014;
+  font-weight:800;
+  animation: pulse 6s infinite linear;
+  box-shadow: 0 8px 30px rgba(6,182,212,0.22), inset 0 -6px 18px rgba(0,0,0,0.12);
+}
+@keyframes pulse{ 0%{ transform: translateY(0);} 50%{ transform: translateY(-1px);} 100%{ transform: translateY(0);} }
+
+/* set glows for special buttons */
+.btn.op::after{ background: radial-gradient(closest-side, rgba(6,182,212,0.18), rgba(6,182,212,0.02)); }
+.btn.equals::after{ background: radial-gradient(closest-side, rgba(124,92,255,0.22), rgba(124,92,255,0.03)); }
+.btn.func::after{ background: radial-gradient(closest-side, rgba(124,92,255,0.08), rgba(124,92,255,0.01)); }
+.btn.mem::after{ background: radial-gradient(closest-side, rgba(0,208,132,0.06), rgba(0,208,132,0.01)); }
+
+/* hover/active interactions: reveal the backlight */
+.btn:hover{ transform: translateY(-4px); box-shadow: 0 14px 40px rgba(2,6,23,0.6); }
+.btn:hover::after{ opacity:1; filter: blur(14px) saturate(130%); }
+.btn:active{ transform: translateY(1px); box-shadow:none; }
+
+/* equals stronger on hover */
+.btn.equals:hover{ transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 60px rgba(124,92,255,0.28); }
+
+/* wide button */
+.btn.wide{ grid-column: 1 / span 2; }
+
+/* small modifier */
+.btn.small{ padding:6px 10px; font-size:0.88rem; border-radius:8px; }
+
+/* history panel */
+.history{
+  width:240px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:10px;
+  padding:10px;
+  border:1px solid rgba(255,255,255,0.03);
+  color:var(--muted);
+  max-height: calc(92vh - 180px);
+  overflow:auto;
+  flex-shrink:0;
+}
+.history h3{ margin:0 0 8px 0; font-size:1rem; color:var(--text); }
+.history ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
+.history li{ display:flex; justify-content:space-between; gap:6px; background: rgba(255,255,255,0.02); padding:8px; border-radius:8px; cursor:pointer; font-size:0.92rem; }
+.history li .expr{ color:var(--muted); } .history li .res{ color:var(--text); font-weight:700; }
+
+/* autocomplete inside calculator */
+.autocomplete{
+  position:absolute;
+  top:118px;
+  right:18px;
+  min-width:220px;
+  background: rgba(6,12,18,0.7);
+  color:var(--text);
+  padding:8px;
+  border-radius:8px;
+  display:none;
+  z-index:60;
+  max-height:260px;
+  overflow:auto;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.autocomplete.open{ display:block; }
+.autocomplete .item{ padding:8px; border-radius:6px; cursor:pointer; color:var(--muted); }
+.autocomplete .item:hover{ background: rgba(255,255,255,0.02); color:var(--text); }
+.autocomplete .item.selected{ background: rgba(6,182,212,0.08); color:var(--text); outline:1px solid rgba(6,182,212,0.12); }
+
+/* responsive adjustments */
+@media (max-width:880px){
+  .calculator{ padding:12px; max-width:720px; }
+  .history{ display:none; width:100%; max-height:200px; }
+  .history.open{ display:block; margin-top:8px; }
+  .main-area{ flex-direction:column; }
+  .autocomplete{ position:fixed; left:12px; right:12px; top:auto; bottom:96px; }
+  .display::after{ width:180px; }
+  .buttons{ max-height: calc(92vh - 340px); }
+}
+
+@media (max-width:520px){
+  .buttons{ grid-template-columns: repeat(4, minmax(52px,1fr)); gap:8px; }
+  .btn{ padding:8px; font-size:0.88rem; border-radius:8px; }
+  .display{ height:52px; font-size:1.5rem; padding:8px 12px; }
+  .top-bar .settings{ gap:8px; }
+}
